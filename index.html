@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f0e4">
+  <title>Pencatatan Kas Keluar</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Pencatatan Kas Keluar">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 48" role="img">
+            <rect x="3" y="5" width="58" height="38" rx="8"></rect>
+            <rect class="bill-inner" x="8" y="10" width="48" height="28" rx="5"></rect>
+            <circle class="bill-coin" cx="32" cy="24" r="9"></circle>
+            <path class="bill-mark" d="M35.5 20.5c-.8-.9-2-1.4-3.5-1.4-2.1 0-3.5 1.1-3.5 2.7 0 3.9 7.2 1.6 7.2 5.5 0 1.7-1.5 2.9-3.8 2.9-1.6 0-3-.6-4-1.7M32 17v14"></path>
+          </svg>
+        </span>
+        <span class="brand-copy"><strong>Kas Keluar</strong><small>Buku besar digital</small></span>
+      </a>
+
+      <div class="nav-caption">MENU UTAMA</div>
+      <nav class="main-nav" aria-label="Navigasi utama">
+        <a class="nav-link active" href="#dashboard" data-view="dashboard"><span class="nav-icon">⌂</span>Dashboard</a>
+        <a class="nav-link" href="#accounts" data-view="accounts"><span class="nav-icon">▤</span>Master Akun</a>
+        <a class="nav-link" href="#journals" data-view="journals"><span class="nav-icon">▧</span>Jurnal Umum</a>
+        <a class="nav-link" href="#cash-out" data-view="cash-out"><span class="nav-icon">↗</span>Kas Keluar</a>
+        <a class="nav-link" href="#reports" data-view="reports"><span class="nav-icon">▥</span>Laporan</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="leaf-art" aria-hidden="true"><span>✳</span><i></i><b></b></div>
+        <p>Catat dengan rapi,<br>kelola dengan tenang.</p>
+        <button class="connection-button" id="open-settings" type="button"><span class="connection-dot"></span><span id="connection-label">Atur koneksi Supabase</span><span aria-hidden="true">⚙</span></button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="page-eyebrow">RINGKASAN KEUANGAN</p>
+          <h1 id="page-title">Dashboard</h1>
+        </div>
+        <div class="topbar-right">
+          <span class="today-label" id="today-label"></span>
+          <button class="button button-outline" id="top-settings" type="button">Pengaturan koneksi</button>
+        </div>
+      </header>
+
+      <div class="notice hidden" id="app-notice" role="status"></div>
+
+      <section class="view active" id="view-dashboard">
+        <div class="welcome-card">
+          <div class="welcome-copy">
+            <span class="welcome-kicker">SELAMAT DATANG</span>
+            <h2>Keuangan tertata,<br><em>pikiran lebih lega.</em></h2>
+            <p>Semua pencatatan kas keluar dan jurnal dalam satu tempat.</p>
+            <a class="button button-light" href="#cash-out" data-view="cash-out">+ Catat kas keluar</a>
+          </div>
+          <div class="welcome-illustration" aria-hidden="true">
+            <span class="sparkle sparkle-one">✦</span><span class="sparkle sparkle-two">✳</span>
+            <div class="coin coin-back"></div><div class="coin coin-front"></div>
+            <div class="wallet"><span></span><i></i></div>
+            <div class="plant"><b></b><b></b><b></b><i></i></div>
+          </div>
+          <span class="float-leaf" aria-hidden="true">❧</span>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-heading"><span>Total akun</span><span class="stat-icon icon-sage">▤</span></div><strong id="stat-accounts">—</strong><small>akun di bagan perkiraan</small></article>
+          <article class="stat-card"><div class="stat-heading"><span>Jurnal tercatat</span><span class="stat-icon icon-cream">▧</span></div><strong id="stat-journals">—</strong><small>transaksi keseluruhan</small></article>
+          <article class="stat-card"><div class="stat-heading"><span>Kas keluar</span><span class="stat-icon icon-rose">↗</span></div><strong id="stat-cash-out">—</strong><small>total jurnal kas keluar</small></article>
+        </div>
+
+        <div class="section-heading"><div><p class="eyebrow">AKTIVITAS</p><h2>Jurnal terbaru</h2></div><a class="text-link" href="#journals" data-view="journals">Lihat semua <span>→</span></a></div>
+        <div class="table-card"><div class="table-scroll"><table><thead><tr><th>Tanggal</th><th>No. referensi</th><th>Deskripsi</th><th>Status</th><th class="align-right">Debit</th></tr></thead><tbody id="recent-journals"></tbody></table></div></div>
+      </section>
+
+      <section class="view" id="view-accounts">
+        <div class="section-heading page-section-heading"><div><p class="eyebrow">DATA MASTER</p><h2>Chart of accounts</h2><p class="section-description">Daftar akun yang digunakan pada pencatatan jurnal.</p></div></div>
+        <div class="content-grid account-grid">
+          <form class="panel form-panel" id="account-form">
+            <div class="panel-title"><span class="panel-symbol">＋</span><div><h3>Tambah akun</h3><p>Lengkapi informasi akun baru.</p></div></div>
+            <input name="id" type="hidden">
+            <label>Kode akun<input name="account_code" required maxlength="30" placeholder="Contoh: 5101"></label>
+            <label>Nama akun<input name="account_name" required maxlength="120" placeholder="Contoh: Beban ATK"></label>
+            <label>Saldo normal<select name="normal_balance" required><option value="debit">Debit</option><option value="credit">Kredit</option></select></label>
+            <label>Klasifikasi laporan<select name="report_classification" required><option value="asset">Aset</option><option value="liability">Liabilitas</option><option value="equity">Ekuitas</option><option value="revenue">Pendapatan</option><option value="expense">Beban</option></select></label>
+            <div class="account-form-actions"><button class="button button-primary" id="account-submit" type="submit">Simpan akun <span>→</span></button><button class="button button-outline hidden" id="cancel-account-edit" type="button">Batal ubah</button></div>
+          </form>
+          <div class="panel table-panel"><div class="panel-title"><span class="panel-symbol">▤</span><div><h3>Daftar akun</h3><p id="account-count">0 akun</p></div></div><div class="table-scroll"><table><thead><tr><th>Kode</th><th>Nama akun</th><th>Klasifikasi</th><th>Saldo normal</th><th>Aksi</th></tr></thead><tbody id="accounts-table"></tbody></table></div></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-journals">
+        <div class="section-heading page-section-heading"><div><p class="eyebrow">BUKU BESAR</p><h2>Jurnal umum</h2><p class="section-description">Seluruh jurnal dan status posting transaksi.</p></div><a class="button button-primary" href="#cash-out" data-view="cash-out">+ Jurnal kas keluar</a></div>
+        <div class="panel table-panel"><div class="panel-title"><span class="panel-symbol">▧</span><div><h3>Daftar jurnal</h3><p>Jurnal POSTED terkunci; koreksi dilakukan dengan jurnal pembalik.</p></div></div><div class="table-scroll"><table><thead><tr><th>Tanggal</th><th>No. referensi</th><th>Deskripsi</th><th>Status</th><th class="align-right">Debit</th><th class="align-right">Kredit</th><th>Aksi</th></tr></thead><tbody id="journals-table"></tbody></table></div></div>
+      </section>
+
+      <section class="view" id="view-cash-out">
+        <div class="section-heading page-section-heading"><div><p class="eyebrow">TRANSAKSI BARU</p><h2>Catat jurnal</h2><p class="section-description">Isi nominal debit dan kredit secara terpisah. Jurnal hanya dapat diposting jika seimbang.</p></div></div>
+        <div class="content-grid cash-grid">
+          <form class="panel form-panel" id="cash-out-form">
+            <div class="panel-title"><span class="panel-symbol">↗</span><div><h3>Detail jurnal</h3><p>Nominal debit dan kredit diisi pada baris masing-masing.</p></div></div>
+            <div class="form-row"><label>Tanggal transaksi<input name="transaction_date" type="date" required></label><label>No. referensi / bukti<input name="reference_number" required maxlength="80" placeholder="Contoh: JRN-001"></label></div>
+            <label>Deskripsi<input name="description" required maxlength="250" placeholder="Deskripsi transaksi"></label>
+            <div class="journal-lines-wrap"><table class="journal-entry-table"><thead><tr><th>Akun</th><th>Debit (Rp)</th><th>Kredit (Rp)</th><th></th></tr></thead><tbody id="journal-entry-lines"></tbody></table></div>
+            <button class="button button-outline add-line-button" id="add-journal-line" type="button">+ Tambah baris akun</button>
+            <div class="journal-totals"><span>Total debit <strong id="total-debit">Rp 0</strong></span><span>Total kredit <strong id="total-credit">Rp 0</strong></span></div>
+            <div class="balance-warning" id="balance-warning" role="status" aria-live="polite">Isi baris debit dan kredit hingga jumlahnya seimbang.</div>
+            <button class="button button-primary" id="post-journal-button" type="submit" disabled>Simpan &amp; posting jurnal <span>→</span></button>
+          </form>
+          <aside class="panel guide-panel"><div class="guide-illustration" aria-hidden="true"><div class="guide-circle"><span>✓</span></div><i></i><b></b></div><p class="eyebrow">PENCATATAN SEIMBANG</p><h3>Debit harus sama dengan kredit.</h3><p>Masukkan nominal pada kolom masing-masing. Jika total belum sama, peringatan akan muncul dan jurnal tidak dapat diposting.</p><div class="balance-line"><span>Total debit</span><strong>=</strong><span>Total kredit</span></div></aside>
+        </div>
+      </section>
+
+      <section class="view" id="view-reports">
+        <div class="section-heading page-section-heading"><div><p class="eyebrow">IKHTISAR</p><h2>Laporan akun</h2><p class="section-description">Ringkasan nominal jurnal berdasarkan klasifikasi laporan.</p></div></div>
+        <div class="report-grid" id="report-cards"></div>
+        <div class="panel table-panel report-table"><div class="panel-title"><span class="panel-symbol">▥</span><div><h3>Ringkasan per akun</h3><p>Total debit dan kredit dari jurnal yang sudah diposting.</p></div></div><div class="table-scroll"><table><thead><tr><th>Kode akun</th><th>Nama akun</th><th>Klasifikasi</th><th class="align-right">Debit</th><th class="align-right">Kredit</th></tr></thead><tbody id="report-table"></tbody></table></div></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="settings-dialog" id="settings-dialog">
+    <form method="dialog" class="dialog-close-row"><button class="icon-button" aria-label="Tutup pengaturan">×</button></form>
+    <p class="eyebrow">PENGATURAN</p><h2>Koneksi Supabase</h2>
+    <p class="dialog-description">Masukkan URL project dan publishable key Supabase. Pengaturan disimpan di browser ini.</p>
+    <form id="settings-form" class="form-panel dialog-form">
+      <label>Project URL<input name="project_url" type="url" required placeholder="https://your-project.supabase.co"></label>
+      <label>Publishable key<input name="publishable_key" required autocomplete="off" placeholder="sb_publishable_..."></label>
+      <div class="dialog-actions"><button class="button button-outline" id="cancel-settings" type="button">Batal</button><button class="button button-primary" type="submit">Simpan &amp; hubungkan</button></div>
+    </form>
+    <p class="security-note">Jangan masukkan service_role key ke browser. Kebijakan database untuk akses publik harus dibatasi sebelum aplikasi dipublikasikan.</p>
+  </dialog>
+
+  <dialog class="settings-dialog" id="reversal-dialog">
+    <form method="dialog" class="dialog-close-row"><button class="icon-button" aria-label="Tutup jurnal pembalik">×</button></form>
+    <p class="eyebrow">JURNAL PEMBALIK</p><h2>Balikkan transaksi</h2>
+    <p class="dialog-description">Jurnal baru akan dibuat dengan debit dan kredit yang ditukar. Jurnal POSTED asli tetap terkunci.</p>
+    <form id="reversal-form" class="form-panel dialog-form">
+      <input name="header_id" type="hidden">
+      <label>Tanggal pembalikan<input name="transaction_date" type="date" required></label>
+      <label>No. referensi pembalik<input name="reference_number" required maxlength="80"></label>
+      <div class="dialog-actions"><button class="button button-outline" id="cancel-reversal" type="button">Batal</button><button class="button button-primary" type="submit">Buat jurnal pembalik</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./js/config.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
